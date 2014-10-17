@@ -13,6 +13,8 @@ public class LabelFilter implements ReversibleFilter {
      */
     private DataSetFilter filter;
 
+    public LabelFilter(DataSetFilter filter) { this.filter = filter; }
+
     /**
      * @see shared.filt.DataSetFilter#filter(shared.DataSet)
      */
