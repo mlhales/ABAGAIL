@@ -49,4 +49,8 @@ public class RandomizedHillClimbing extends OptimizationAlgorithm {
         return cur;
     }
 
+    public double getOptimum() {
+        return curVal;
+    }
+
 }

@@ -74,6 +74,22 @@ public class MIMIC extends OptimizationAlgorithm {
         return best;
     }
 
+    public double getOptimum() {
+        OptimizationProblem op = getOptimizationProblem();
+        Instance[] data = new Instance[samples];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = distribution.sample(null);
+        }
+        double bestVal = op.value(data[0]);
+        for (int i = 1; i < data.length; i++) {
+            double value = op.value(data[i]);
+            if (value > bestVal) {
+                bestVal = value;
+            }
+        }
+        return bestVal;
+    }
+
     /**
      * @see shared.Trainer#train()
      */

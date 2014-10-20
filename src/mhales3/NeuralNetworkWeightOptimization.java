@@ -1,4 +1,4 @@
-package opt.test;
+package mhales3;
 
 import func.nn.backprop.BackPropagationNetwork;
 import func.nn.backprop.BackPropagationNetworkFactory;
@@ -26,9 +26,9 @@ import java.util.Scanner;
  * @author Hannah Lau
  * @version 1.0
  */
-public class DigitsTest {
-    private static Instance[] instances = initializeInstances("src/opt/test/optdigits.training.csv", 3824);
-    private static Instance[] testInstances = initializeInstances("src/opt/test/optdigits.test.csv", 1798);
+public class NeuralNetworkWeightOptimization {
+    private static Instance[] instances = initializeInstances("src/mhales3/optdigits.training.csv", 3824);
+    private static Instance[] testInstances = initializeInstances("src/mhales3/optdigits.test.csv", 1798);
 
     private static int inputLayer = 64, hiddenLayer = 46, outputLayer = 1, trainingIterations = 10000;
     private static BackPropagationNetworkFactory factory = new BackPropagationNetworkFactory();

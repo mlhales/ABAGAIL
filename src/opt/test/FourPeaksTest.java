@@ -1,5 +1,6 @@
 package opt.test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import dist.DiscreteDependencyTree;
@@ -32,9 +33,9 @@ import shared.FixedIterationTrainer;
  */
 public class FourPeaksTest {
     /** The n value */
-    private static final int N = 200;
+    private static final int N = 100;
     /** The t value */
-    private static final int T = N / 5;
+    private static final int T = N / 10;
     
     public static void main(String[] args) {
         int[] ranges = new int[N];
@@ -48,25 +49,54 @@ public class FourPeaksTest {
         HillClimbingProblem hcp = new GenericHillClimbingProblem(ef, odd, nf);
         GeneticAlgorithmProblem gap = new GenericGeneticAlgorithmProblem(ef, odd, mf, cf);
         ProbabilisticOptimizationProblem pop = new GenericProbabilisticOptimizationProblem(ef, odd, df);
-        
-        RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
-        FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 1000);
-        fit.train();
-        System.out.println("RHC: " + ef.value(rhc.getOptimal()));
-        
-        SimulatedAnnealing sa = new SimulatedAnnealing(1E11, .95, hcp);
-        fit = new FixedIterationTrainer(sa, 1000);
-        fit.train();
-        System.out.println("SA: " + ef.value(sa.getOptimal()));
-        
-        StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, 100, 10, gap);
-        fit = new FixedIterationTrainer(ga, 1000);
-        fit.train();
-        System.out.println("GA: " + ef.value(ga.getOptimal()));
-        
-        MIMIC mimic = new MIMIC(200, 20, pop);
-        fit = new FixedIterationTrainer(mimic, 1000);
-        fit.train();
-        System.out.println("MIMIC: " + ef.value(mimic.getOptimal()));
+
+        Integer iterations[] = {10, 100, 1000, 2000, 4000, 8000, 10000, 12000, 14000, 16000, 18000, 20000};
+        double start, end, rchr = 0, rcho = 0, sar = 0, sao = 0, gar = 0, gao = 0, mr = 0, mo = 0;
+
+        ArrayList<String> optima = new ArrayList<String>();
+        ArrayList<String> runtime = new ArrayList<String>();
+        for (Integer i: iterations) {
+
+            RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);
+            start = System.nanoTime();
+            new FixedIterationTrainer(rhc, i).train();
+            end = System.nanoTime();
+            rcho = ef.value(rhc.getOptimal());
+            rchr = end - start;
+            rchr /= Math.pow(10,9);
+
+            SimulatedAnnealing sa = new SimulatedAnnealing(1E11, .95, hcp);
+            start = System.nanoTime();
+            new FixedIterationTrainer(sa, i).train();
+            end = System.nanoTime();
+            sao = ef.value(sa.getOptimal());
+            sar = end - start;
+            sar /= Math.pow(10,9);
+
+            StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(400, 200, 20, gap);
+            start = System.nanoTime();
+            new FixedIterationTrainer(ga, i).train();
+            end = System.nanoTime();
+            gao = ef.value(ga.getOptimal());
+            gar = end - start;
+            gar /= Math.pow(10,9);
+            if(i < 4000) {
+                MIMIC mimic = new MIMIC(200, 20, pop);
+                start = System.nanoTime();
+                new FixedIterationTrainer(mimic, i).train();
+                end = System.nanoTime();
+                mo = ef.value(mimic.getOptimal());
+                mr = end - start;
+                mr /= Math.pow(10,9);
+            }
+            optima.add(i.toString() + ", " + rcho + ", " + sao + ", " + gao + ", " + mo);
+            runtime.add(i.toString() + ", " + rchr + ", " + sar  + ", " + gar  + ", " + mr);
+        }
+        System.out.println("Iterations, RHC, SA, GA, MIMIC");
+        for (String line :optima) System.out.println(line);
+        System.out.println();
+        System.out.println("Iterations, RHC, SA, GA, MIMIC");
+        for (String line :runtime) System.out.println(line);
+        System.out.println();
     }
 }

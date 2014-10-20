@@ -141,4 +141,17 @@ public class StandardGeneticAlgorithm extends OptimizationAlgorithm {
         return population[best];
     }
 
+    public double getOptimum() {
+        double bestVal = values[0];
+        int best = 0;
+        for (int i = 1; i < population.length; i++) {
+            double value = values[i];
+            if (value > bestVal) {
+                bestVal = value;
+                best = i;
+            }
+        }
+        return best;
+    }
+
 }
